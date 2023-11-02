@@ -11,12 +11,13 @@ from keras.models import load_model
 import wave
 
 binary_model = load_model('../models-def/model-binary-separatechannels/')
-four_classes_model = load_model('../models-def/model-4classes-separatechannels/')
+four_classes_model = load_model(
+    '../models-def/model-4classes-separatechannels/')
 
 # spectrogram settings
-hop_length = 256 # number of samples per time-step in spectrogram
-n_mels = 128 # number of bins in spectrogram. Height of image
-time_steps = 512 # number of time-steps.
+hop_length = 256  # number of samples per time-step in spectrogram
+n_mels = 128  # number of bins in spectrogram. Height of image
+time_steps = 512  # number of time-steps.
 
 # settings for the scanning of the spectrogram
 step = 32
@@ -35,7 +36,7 @@ utils.create_folder("../testing/")
 
 # read the audio file
 sample = sys.argv[1]
-if not(sample.endswith(".wav")):
+if not (sample.endswith(".wav")):
     print("The input file is not a .wav file")
 
 fs, data = wavfile.read(sample)
@@ -66,9 +67,10 @@ for i in range(0, data.shape[1]):
 
     # save spectrogram
     spec_name = channel_path + "spec_ch" + str(i) + '.png'
-    spectrum = vision.spectrogram_image(y, sr=sr, out=spec_name, hop_length=hop_length, n_mels=n_mels, save=True)
+    spectrum = vision.spectrogram_image(
+        y, sr=sr, out=spec_name, hop_length=hop_length, n_mels=n_mels, save=True)
     height, width = spectrum.shape[:2]
-    
+
     if width < 256:
         print("The audio file is too short to be analyzed")
         break
@@ -76,20 +78,24 @@ for i in range(0, data.shape[1]):
     # scan the whole spectrogram and divide it in segments (windows)
     for i in range(0, width//step):
         if offset + i*step + window_width < width:
-            window = spectrum[0:height, offset + i*step:offset+(i*step)+window_width]
+            window = spectrum[0:height, offset +
+                              i*step:offset+(i*step)+window_width]
             window = np.expand_dims(window, axis=0)
 
             # classify the window
             binary_label = np.argmax(binary_model.predict(window, verbose=0))
-            if binary_label == 1: # irregularity detected
+            if binary_label == 1:  # irregularity detected
                 timestamp = round(duration * (i * step) / width, 2)
 
                 # classify the speedup factor
-                speedup_label = np.argmax(four_classes_model.predict(window, verbose=0))
-                print(f"Segment {i}, time: {str(timestamp)}s, speedup: {speedup_dict[speedup_label]}")
+                speedup_label = np.argmax(
+                    four_classes_model.predict(window, verbose=0))
+                print(
+                    f"Segment {i}, time: {str(timestamp)}s, speedup: {speedup_dict[speedup_label]}")
                 with open(log_filename, 'a') as log_file:
-                    log_file.write(f"Segment {i}, time: {str(timestamp)}s, speedup: {speedup_dict[speedup_label]}\n")
+                    log_file.write(
+                        f"Segment {i}, time: {str(timestamp)}s, speedup: {speedup_dict[speedup_label]}\n")
 
     # save the windows for manual analysis
-    vision.compute_segments([channel_path], [segments_path], step=step, window_width=window_width, overwrite=True, multiple=True, offset=0)
-    
+    vision.compute_segments([channel_path], [segments_path], step=step,
+                            window_width=window_width, overwrite=True, multiple=True, offset=0)
