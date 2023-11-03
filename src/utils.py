@@ -69,13 +69,12 @@ def create_dataset(in_paths, labels, out_paths, ratios, seed):
             random.Random(seed).shuffle(indexes)
 
             for j in range(0, len(files)):
-                index = indexes[j]
                 if j < n_train:
-                    train_files.append(files[index])
+                    train_files.append(files[indexes[j]])
                 elif n_train <= j < n_train + n_valid:
-                    valid_files.append(files[index])
+                    valid_files.append(files[indexes[j]])
                 else:
-                    test_files.append(files[index])
+                    test_files.append(files[indexes[j]])
 
             for i, out_path in enumerate(out_paths):
                 create_folder(out_path + label + "/")
