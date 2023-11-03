@@ -34,6 +34,8 @@ def create_folder(path, overwrite=True):
             out_paths ---> names of training, validation and test folders, in this order
               ratios  ---> what fraction of the dataset goes into training, validation and testing
               seed    ---> seed used for randomization 
+
+              NOTE: this function is only used in the Colab Notebook for now
 """
 
 
@@ -47,13 +49,7 @@ def create_dataset(in_paths, labels, out_paths, ratios, seed):
         return
 
     for out_path in out_paths:
-        if not os.path.exists(out_path):
-            os.makedirs(out_path)
-            print(f"Created folder {out_path}")
-        else:
-            utils.delete_folder(out_path)
-            os.makedirs(out_path)
-            print(f"Substituted folder {out_path}")
+        create_folder(out_path)
 
     for label_index, in_path in enumerate(in_paths):
         # label = in_path.split('/')[-2]
@@ -83,11 +79,7 @@ def create_dataset(in_paths, labels, out_paths, ratios, seed):
                     test_files.append(files[index])
 
             for i, out_path in enumerate(out_paths):
-                if not os.path.exists(out_path + label + "/"):
-                    os.makedirs(out_path + label + "/")
-                else:
-                    utils.delete_folder(out_path + label + "/")
-                    os.makedirs(out_path + label + "/")
+                create_folder(out_path + label + "/")
 
                 if i == 0:
                     for filename in train_files:
