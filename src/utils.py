@@ -52,7 +52,6 @@ def create_dataset(in_paths, labels, out_paths, ratios, seed):
         create_folder(out_path)
 
     for label_index, in_path in enumerate(in_paths):
-        # label = in_path.split('/')[-2]
         label = labels[label_index]
 
         for (root, dirs, files) in os.walk(in_path, topdown=True):
