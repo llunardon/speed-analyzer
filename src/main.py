@@ -8,7 +8,6 @@ import vision
 from scipy.io import wavfile
 from keras.models import load_model
 import librosa
-import wave
 
 # load the keras classifiers
 binary_model = load_model('../models-def/model-binary-separatechannels/')
