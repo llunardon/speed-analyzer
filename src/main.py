@@ -6,10 +6,11 @@ import utils
 import vision
 
 from scipy.io import wavfile
-import librosa
 from keras.models import load_model
+import librosa
 import wave
 
+# load the keras classifiers
 binary_model = load_model('../models-def/model-binary-separatechannels/')
 four_classes_model = load_model(
     '../models-def/model-4classes-separatechannels/')
@@ -84,6 +85,7 @@ for i in range(0, data.shape[1]):
 
             # classify the window
             binary_label = np.argmax(binary_model.predict(window, verbose=0))
+
             if binary_label == 1:  # irregularity detected
                 timestamp = round(duration * (i * step) / width, 2)
 
