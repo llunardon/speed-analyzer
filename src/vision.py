@@ -52,8 +52,9 @@ def highlight_split(img, low_thresh=3, high_thresh=255, horizontal_size=3, verti
 
 
 """
-    takes in input an image
+    takes in input the concatenation of a spectrogram and the thresholded version
     returns a list of lists, with every list being an interval of x coordinates
+    TODO: make find_splits(spectrum, thresholded) that concatenates the two inside the method
 """
 
 
@@ -88,56 +89,9 @@ def find_splits(img):
 
 
 """
-    takes in input: img == np.array
-                    filename of the source image
-                    folder in which to store the output
-                    list of lists of x coordinates
-                    width of the window to extract
-                
-    saves the images in the given folder
-"""
-
-
-def extract_windows(img, filename, out_path, list_splits, window_width):
-    height, width = img.shape[:2]
-    index = 1
-
-    for split in list_splits:
-        window_width = final_width - (split[1] - split[0])
-
-        # resize the window if it goes out of bounds
-        roi_start = split[0] - window_width//2
-        if roi_start < 0:
-            roi_start = 0
-
-        roi_end = split[1] + (window_width - window_width//2)
-        if roi_end > width:
-            roi_end = width
-
-        roi = img[0:height//2, roi_start:roi_end]
-
-        # resize to give all images the same width
-        if roi.shape[1] != 256:
-            old_dim = roi.shape[1]
-            roi = cv.resize(roi, (256, 128), cv.INTER_AREA)
-
-        speed = (filename.split("spectrogram")[1]).split("COMPARISON")[0][0:-1]
-
-        # some files have multiple splits: save all of them with different names
-        if len(list_splits) > 1:
-            segment_filename = out_path + speed + \
-                "_index" + str(index) + ".png"
-        else:
-            segment_filename = out_path + speed + ".png"
-
-        cv.imwrite(segment_filename, roi)
-
-        index += 1
-
-
-"""
     takes in input an image and the middle region and saves the two halfs in separate files
     middle = list of two x coordinates, which mark the start and the end of the middle region
+    TODO: substitute middle with an integer and a width parameter
 """
 
 
@@ -158,7 +112,8 @@ def divide_half(img, filename, middle, left_path, right_path):
 
 """
     takes in input an image (numpy array) and divides it into segments
-    outputs a list that contains all the segments
+    returns a list that contains all the segments
+
     multiple: boolean value. if set to false, only save the first segment of the image
     offset: how many pixels from the left to use as starting point
 """
@@ -185,7 +140,7 @@ def segment(img, step, window_width, multiple, offset):
     in_paths: list of input folders
     out_paths: list of output folders
     multiple: boolean value. if set to false, only save the first segment of the image
-    offset: how many pixels from the left to use as starting point
+    offset: how many pixels from the left to use as starting point (used to skip most of the glissando region)
 """
 
 
