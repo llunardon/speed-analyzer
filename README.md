@@ -3,10 +3,10 @@
 ### Usage:
 
 ```
-    python3 src/main.py "path_to_wav_file"
+    python3 src/main.py "path_to_wav_file" "path_to_binary_model" "path_to_4classes_model"
 ```
 
-The script generates:
+The script generates a folder called `testing` that contains:
 
 - a log file for each channel describing the irregularities found, with their relative timestamps
 - a folder for each channel containing the respective .wav file and spectrogram
