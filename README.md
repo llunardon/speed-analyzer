@@ -3,10 +3,11 @@
 ### Usage:
 
 ```
-    python3 src/main.py "path_to_wav_file" "path_to_binary_model" "path_to_4classes_model"
+    python3 src/main.py -i "wav_file_path" -b "binary_model_path" -f "4classes_model_path"
 ```
 
-where the path to the model is the path to the **folder** containing the model, for example `models-def/model-binary-separateclasses`
+- **Note:** The arguments `-b` and `-f` are optional, if not provided the default models used are
+  `model-binary-separatechannels` and `model-4classes-separatechannels` in the folder `models-def/`
 
 ---
 
@@ -31,8 +32,8 @@ The output folders are only for manual revision, they can be eliminated in the f
 2.  The code used for dividing the dataset in training-validation-testing and fitting the model is
     in `notebooks/model_fit_colab.ipynb`, and it's suited for running in Google Colab
 
-        - The notebook uses the dataset generated in the previous step, if you want to recreate the steps
-          I suggest you zip the dataset into an archive and you upload it into your google drive so you can load it in Colab
+    - The notebook uses the dataset generated in the previous step, if you want to recreate the steps
+      I suggest you zip the dataset into an archive and you upload it into your google drive so you can load it in Colab
 
 3.  The colab notebook generates a zip archive of the model, which can be downloaded and used after extraction. The directory `models-def`
     contains some pre-trained models. For now the `main.py` script uses the models `model-binary-separatechannels` and `model-4classes-separatechannels`

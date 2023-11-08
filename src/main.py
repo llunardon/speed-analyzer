@@ -1,6 +1,7 @@
 import os
 import sys
 import numpy as np
+import argparse
 
 import utils
 import vision
@@ -8,6 +9,7 @@ import vision
 from scipy.io import wavfile
 from keras.models import load_model
 import librosa
+
 
 def analyze_speed(sample, binary_model_path, four_classes_model_path):
     # load the keras classifiers
@@ -74,12 +76,13 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
         # scan the whole spectrogram and divide it in segments (windows)
         for i in range(0, width//step):
             if offset + i*step + window_width < width:
-                window = spectrum[0:height, offset +
-                                i*step:offset+(i*step)+window_width]
+                window = spectrum[0:height, offset+i *
+                                  step:offset+(i*step)+window_width]
                 window = np.expand_dims(window, axis=0)
 
                 # classify the window
-                binary_label = np.argmax(binary_model.predict(window, verbose=0))
+                binary_label = np.argmax(
+                    binary_model.predict(window, verbose=0))
 
                 if binary_label == 1:  # irregularity detected
                     timestamp = round(duration * (i * step) / width, 2)
@@ -95,15 +98,32 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
 
         # save the windows for manual analysis
         vision.compute_segments([channel_path], [segments_path], step=step,
-                                window_width=window_width, overwrite=True, multiple=True, offset=0)
+                                window_width=window_width, overwrite=True, multiple=True, offset=offset)
+
 
 if __name__ == "__main__":
+    # parse input arguments
+    parser = argparse.ArgumentParser(
+        description="Analyze a digitised magnetic audio tape and detect irregularities in the playback speed.")
+
+    # required arguments: audio sample
+    parser.add_argument('-i', '--input', type=str,
+                        help='path to the audio sample to analyze')
+
+    # optional arguments: path to models
+    parser.add_argument('-b', '--bin_model', type=str, nargs='?',
+                        default='models-def/model-binary-separatechannels/', help='path to the binary model directory')
+    parser.add_argument('-f', '--four_model', type=str, nargs='?',
+                        default='models-def/model-4classes-separatechannels/', help='path to the four-classes model directory')
+
+    args = parser.parse_args()
+
     # read the input parameters
-    sample = sys.argv[1]
-    binary_model_path = sys.argv[2]
-    four_classes_model_path = sys.argv[3]
+    sample = args.input
+    binary_model_path = args.bin_model
+    four_classes_model_path = args.four_model
 
     if not (sample.endswith(".wav")):
         print("The input file is not a .wav file")
-    else:
-        analyze_speed(sample, binary_model_path, four_classes_model_path)
+
+    analyze_speed(sample, binary_model_path, four_classes_model_path)

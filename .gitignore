@@ -2,4 +2,5 @@
 /samples
 dataset.tar.gz
 *.png
+*.zip
 **/__pycache__
