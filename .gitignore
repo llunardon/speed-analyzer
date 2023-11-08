@@ -1,4 +1,5 @@
-/testing
+/output
 /samples
 dataset.tar.gz
 *.png
+**/__pycache__
