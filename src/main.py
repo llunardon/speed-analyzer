@@ -32,20 +32,21 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
         3: "quarter"
     }
 
-    utils.create_folder("../testing/")
+    out_path = os.path.dirname(os.path.realpath('__file__')) + "/output/"
+    utils.create_folder(out_path)
 
     fs, data = wavfile.read(sample)
 
     # for each channel:
     for i in range(0, data.shape[1]):
-        log_filename = "../testing/output-ch" + str(i) + ".txt"
+        log_filename = out_path + "output-ch" + str(i) + ".txt"
         with open(log_filename, 'w') as log_file:
             log_file.write(f"Filename: {sample}\n")
             print(f"Created file {log_filename}")
 
         # create folders where to save the separate audio and segmented spectrograms
-        channel_path = '../testing/ch' + str(i) + "/"
-        segments_path = '../testing/segments_ch' + str(i) + "/"
+        channel_path = out_path + "ch" + str(i) + "/"
+        segments_path = out_path + "segments_ch" + str(i) + "/"
         utils.create_folder(channel_path)
         utils.create_folder(segments_path)
 
