@@ -34,9 +34,11 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
         3: "quarter"
     }
 
+    # create output folder
     out_path = os.path.dirname(os.path.realpath('__file__')) + "/output/"
     utils.create_folder(out_path)
 
+    # read audio sample
     fs, data = wavfile.read(sample)
 
     # for each channel:
@@ -125,5 +127,5 @@ if __name__ == "__main__":
 
     if not (sample.endswith(".wav")):
         print("The input file is not a .wav file")
-
-    analyze_speed(sample, binary_model_path, four_classes_model_path)
+    else:
+        analyze_speed(sample, binary_model_path, four_classes_model_path)
