@@ -1,5 +1,7 @@
 # MPAI Audio Analyser: Speed Irregularities Detector
 
+- **Note:** the script `wav2spec.py` uses SoX for computing the spectrograms
+
 ### Usage:
 
 ```
@@ -42,4 +44,4 @@ The output folders are only for manual revision, they can be eliminated in the f
 
 ### TODO:
 
-- Try using normal log-spectrogram instead of mel-spectrogram $\rightarrow$ will likely require another way to divide the dataset in two
+- Find a way to divide the spectrograms in two based on the scale of the y-axis
