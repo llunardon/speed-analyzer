@@ -11,15 +11,16 @@ import skimage.io
 """
 
 
-def spectrogram_image(y, sr, out, hop_length, n_mels, save):
+def mel_spectrogram_image(y, sr, out, hop_length, n_mels, dimensions, save):
     # use log-melspectrogram
     mels = librosa.feature.melspectrogram(
-        y=y, sr=sr, n_mels=n_mels, n_fft=hop_length*2, hop_length=hop_length)
+        y=y, sr=sr, n_mels=n_mels, n_fft=hop_length*4, hop_length=hop_length, fmax=20000)
     mels = np.log(mels + 1e-9)  # add small number to avoid log(0)
 
     # min-max scale to fit inside 8-bit range
     img = scale_minmax(mels, 0, 255).astype(np.uint8)
     img = np.flip(img, axis=0)  # put low frequencies at the bottom in image
+    img = cv.resize(img, dimensions, cv.INTER_LINEAR)
 
     # save as PNG and return numpy array
     if save == True:
