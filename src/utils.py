@@ -29,6 +29,17 @@ def create_folder(path, overwrite=True):
             print(f"Substituted folder {path}")
 
 
+def collect_audio_files(path):
+    ret_list = []
+
+    for (root, dirs, filenames) in os.walk(path):
+        for f in filenames:
+            if f.endswith('.wav'):
+                ret_list.append(os.path.join(root, f))
+
+    return ret_list
+
+
 """
     inputs: in_paths  ---> list of paths, where every path corresponds to a different label
             out_paths ---> names of training, validation and test folders, in this order
