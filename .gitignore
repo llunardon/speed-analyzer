@@ -1,5 +1,6 @@
 /output
 /samples
+/temp
 dataset.tar.gz
 *.png
 *.zip
