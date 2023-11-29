@@ -1,5 +1,7 @@
 # MPAI Audio Analyser: Speed Irregularities Detector
 
+- **Note:** as of November 29, 2023 the notebooks are outdated as they use old versions of methods. They'll be updated asap
+
 - **Note:** the script `wav2spec.py` uses SoX for computing the spectrograms with 'lin' and 'log' parameters,
   while it uses Librosa for the mel spectrogram.
 
@@ -48,4 +50,4 @@ The output folders are only for manual revision, they can be eliminated in the f
 
 ### TODO:
 
-- Find a way to divide the spectrograms in two based on the scale of the y-axis
+- Write a script that segments the spectrograms, or integrate it in `divide.py`
