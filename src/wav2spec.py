@@ -3,12 +3,10 @@ import sys
 import numpy as np
 import argparse
 import subprocess
+import librosa
 
 import utils
 import vision
-
-from scipy.io import wavfile
-import librosa
 
 
 def wav2spec(sample, scale, out_path):
@@ -22,6 +20,10 @@ def wav2spec(sample, scale, out_path):
     # mel-spec
     if scale == "mel":
         duration = int(round(librosa.get_duration(filename=sample), 2))
+        if duration < 1:
+            print(f"file {sample} is too short. Skipping to next one..")
+            return
+
         y, sr = librosa.load(sample, sr=None)
 
         vision.mel_spectrogram_image(
@@ -29,6 +31,10 @@ def wav2spec(sample, scale, out_path):
 
     else:
         duration = round(librosa.get_duration(filename=sample), 2)
+        if duration < 1:
+            print(f"file {sample} is too short. Skipping to next one..")
+            return
+
         width = str(int(duration * 100))
         height = str(128)
 
