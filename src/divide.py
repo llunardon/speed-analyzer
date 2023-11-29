@@ -11,14 +11,12 @@ import vision
 
 
 def divide_spec(spec, scale, out_path):
-    print(f"current file: {spec}")
     if not out_path.endswith("/"):
         out_path = out_path + "/"
     c_path = out_path + "c/"
     w_path = out_path + "w/"
 
-    if not os.path.isdir(out_path):
-        utils.create_folder(out_path)
+    if not (os.path.isdir(c_path) or os.path.isdir(w_path)):
         utils.create_folder(c_path)
         utils.create_folder(w_path)
 
@@ -69,7 +67,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Divide some spectrogram(s) in two parts, the one before the speed transition and the one after")
 
-    # required argument: audio sample
+    # required argument: spectrogram(s)
     parser.add_argument('-i', '--input', type=str,
                         help="""Path to the spectrogram(s) to divide. It can be either
                         a folder or a single file""")
@@ -81,8 +79,8 @@ if __name__ == "__main__":
 
     # required argument: scale
     parser.add_argument('-s', '--scale', type=str,
-                        help="""What scale is used on the y-axis of the spectrogram.
-                        possible options are 'log', 'mel' or 'lin'""")
+                        help="""What scale is used on the y-axis of the spectrogram(s).
+                        Possible options are 'log', 'mel' or 'lin'""")
 
     args = parser.parse_args()
 
