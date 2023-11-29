@@ -1,6 +1,10 @@
 # MPAI Audio Analyser: Speed Irregularities Detector
 
-- **Note:** the script `wav2spec.py` uses SoX for computing the spectrograms
+- **Note:** the script `wav2spec.py` uses SoX for computing the spectrograms with 'lin' and 'log' parameters,
+  while it uses Librosa for the mel spectrogram.
+
+You can install SoX from [Matteo Spanio](https://github.com/matteospanio)'s [fork](https://github.com/matteospanio/sox-extended),
+which enables computing spectrograms with logarithmic scale on the y-axis. The function is not supported natively by SoX
 
 ### Usage:
 
