@@ -42,41 +42,38 @@ def scale_minmax(X, min=0.0, max=1.0):
 """
 
 
-def highlight_split(img, low_thresh=3, high_thresh=255, horizontal_size=3, vertical_size=20):
+def highlight_split(img, low_thresh=3, high_thresh=255, h_size=3, v_size=20):
     # threshold the original image and extract vertical lines using vertical morphological operator
     ret, thresh1 = cv.threshold(img, low_thresh, high_thresh, cv.THRESH_BINARY)
     verticalStructure = cv.getStructuringElement(
-        cv.MORPH_RECT, (horizontal_size, vertical_size))
+        cv.MORPH_RECT, (h_size, v_size))
     ret_img = cv.dilate(thresh1, verticalStructure)
 
     return ret_img
 
 
 """
-    takes in input the concatenation of a spectrogram and the thresholded version
-    returns a list of lists, with every list being an interval of x coordinates
-    TODO: make find_splits(spectrum, thresholded) that concatenates the two inside the method
+    takes in input a thresholded image (pixels are either 0 or 255)
+    returns a list of lists, with every list being an interval of x coordinates that make a black band
 """
 
 
 def find_splits(img):
     height, width = img.shape[:2]
-
-    lower_half = img[height//2:height, 0:width]
     list_splits = []
     i = 0
 
-    for j in range(0, height//2 - 1):
+    for j in range(0, height-1):
         # start from the last seen black column if already encountered
         if len(list_splits) > 1:
             i = list_splits[-1][-1]
 
         while (i < width):
             # found a black pixel: append x coordinate at the end of the ROI
-            if not (lower_half[j][i].any()):
+            if not (img[j][i].any()):
                 start_roi = i
 
-                while not (lower_half[j][i]).any():
+                while not (img[j][i]).any():
                     i += 1
 
                 end_roi = i
@@ -92,18 +89,17 @@ def find_splits(img):
 """
     takes in input an image and the middle region and saves the two halfs in separate files
     middle = list of two x coordinates, which mark the start and the end of the middle region
-    TODO: substitute middle with an integer and a width parameter
 """
 
 
 def divide_half(img, filename, middle, left_path, right_path):
     height, width = img.shape[:2]
 
-    left_roi = img[0:height//2, 0:middle[0]]
-    right_roi = img[0:height//2, middle[1]:width-1]
+    left_roi = img[0:height, 0:middle[0]]
+    right_roi = img[0:height, middle[1]:width-1]
 
-    left_filename = left_path + "left_" + filename
-    right_filename = right_path + "right_" + filename
+    left_filename = left_path + "c_" + filename
+    right_filename = right_path + "w_" + filename
 
     cv.imwrite(left_filename, left_roi)
     cv.imwrite(right_filename, right_roi)
