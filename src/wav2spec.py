@@ -10,6 +10,8 @@ import vision
 
 
 def wav2spec(sample, scale, out_path):
+    if not out_path.endswith("/"):
+        out_path = out_path + "/"
     if not os.path.isdir(out_path):
         utils.create_folder(out_path)
 
@@ -17,25 +19,20 @@ def wav2spec(sample, scale, out_path):
     out_name = sample.split("/")
     out_name = out_path + out_name[-1].split(".")[0] + '.png'
 
+    duration = int(round(librosa.get_duration(filename=sample), 2))
+    if duration < 1:
+        print(f"file {sample} is too short. Skipping to next one..")
+        return
+
     # mel-spec
     if scale == "mel":
-        duration = int(round(librosa.get_duration(filename=sample), 2))
-        if duration < 1:
-            print(f"file {sample} is too short. Skipping to next one..")
-            return
-
         y, sr = librosa.load(sample, sr=None)
 
         vision.mel_spectrogram_image(
-            y, sr, out_name, hop_length=512, n_mels=128, dimensions=(duration * 100, 128), save=True)
+            y, sr, out_name, hop_length=512, n_mels=128, dimensions=(duration*100, 128), save=True)
 
     else:
-        duration = round(librosa.get_duration(filename=sample), 2)
-        if duration < 1:
-            print(f"file {sample} is too short. Skipping to next one..")
-            return
-
-        width = str(int(duration * 100))
+        width = str(duration*100)
         height = str(128)
 
         # lin-spec
@@ -96,7 +93,7 @@ if __name__ == "__main__":
     # check validity of scale parameter
     if scale not in ["log", "mel", "lin"]:
         print(
-            f"{scale} is not a valid scale option, see wav2spec -h for help. Exiting program")
+            f"{scale} is not a valid scale option, see wav2spec.py -h for help. Exiting program")
         sys.exit(1)
 
     if in_path.endswith(".wav"):
