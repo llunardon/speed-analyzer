@@ -141,7 +141,7 @@ def segment(img, step, window_width, multiple, offset):
 """
 
 
-def compute_segments(in_paths, out_paths, step, window_width, overwrite, multiple, offset):
+def compute_segments(in_paths, out_paths, step, window_width, multiple, offset):
     if len(in_paths) == 0:
         return
 
@@ -149,13 +149,6 @@ def compute_segments(in_paths, out_paths, step, window_width, overwrite, multipl
         print(
             f"Length of input list is {len(in_paths)} while length of output list is {len(out_paths)}")
         return
-
-    for path in out_paths:
-        if overwrite == True:
-            utils.create_folder(path)
-        else:
-            print(
-                f"Folder {path} already exists and overwrite is set to False")
 
     for i, in_path in enumerate(in_paths):
         for (root, dirs, files) in os.walk(in_path, topdown=True):
