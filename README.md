@@ -1,13 +1,5 @@
 # MPAI Audio Analyser: Speed Irregularities Detector
 
-- **Note:** as of November 29, 2023 the notebooks are outdated as they use old versions of methods. They'll be updated asap
-
-- **Note:** the script `wav2spec.py` uses SoX for computing the spectrograms with 'lin' and 'log' parameters,
-  while it uses Librosa for the mel spectrogram.
-
-You can install SoX from [Matteo Spanio](https://github.com/matteospanio)'s [fork](https://github.com/matteospanio/sox-extended),
-which enables computing spectrograms with logarithmic scale on the y-axis. The function is not supported natively by SoX
-
 ### Usage:
 
 ```
@@ -31,23 +23,30 @@ The output folders are only for manual revision, they can be eliminated in the f
 
 ### Dataset Extraction
 
-1.  The code used for extracting the spectrogram data from the audio files is in `notebooks/spectral_extraction.ipynb`
+- **Note:** the script `wav2spec.py` uses SoX for computing the spectrograms with 'lin' and 'log' parameters,
+  while it uses Librosa for the mel spectrogram.
 
-    - At the end of the notebook execution you'll have a dataset divided in two subfolders, one labeled 'correct' and the other 'wrong'
+You can install SoX from [Matteo Spanio](https://github.com/matteospanio)'s [fork](https://github.com/matteospanio/sox-extended),
+which enables computing spectrograms with logarithmic scale on the y-axis. The function is not supported natively by SoX
 
-    - If you want to download the dataset directly, you can find it at [this link](https://drive.google.com/file/d/1Hlm7xSH6ZX_6LUB88vXAZWO3_kfFJxkO/view?usp=drive_link)
+Starting from the audio samples with the channels already separated, follow these steps:
 
-2.  The code used for dividing the dataset in training-validation-testing and fitting the model is
-    in `notebooks/model_fit_colab.ipynb`, and it's suited for running in Google Colab
+1. Execute script `src/wav2spec.py -i [audio_samples] -s [scale] -o [spec_dir]`. This will take the audio samples and compute a spectrogram for each one
+   of them, using the specified scale. The possible scales are 'log', 'lin' and 'mel', and the frequencies extracted are 0-20k Hz
 
-    - The notebook uses the dataset generated in the previous step, if you want to recreate the steps
-      I suggest you zip the dataset into an archive and you upload it into your google drive so you can load it in Colab
+2. Execute script `src/divide.py -i [spec_dir] -s [scale] -o [halfs]`. The script will divide the spectrograms in two halfs, one labeled
+   'c' and one labeled 'w'
 
-3.  The colab notebook generates a zip archive of the model, which can be downloaded and used after extraction. The directory `models-def`
-    contains some pre-trained models. For now the `main.py` script uses the models `model-binary-separatechannels` and `model-4classes-separatechannels`
+3. Execute script `src/segment.py -c [halfs_c] -w [halfs_w] -o [out_folder]`. This will extract numerous fixed-size segments from the two halfs
+   computed at the previous step, which will be used as the dataset for the models
+
+- If you want to skip these steps and download the archived datasets directly, you can get them [here](https://drive.google.com/drive/folders/1-XSowWtwhLuJ3vkEJ-t8XaG1RTapbWNw?usp=sharing)
 
 ---
 
 ### TODO:
 
-- Write a script that segments the spectrograms, or integrate it in `divide.py`
+- Script to divide audio samples in two channels
+- Automate dataset extraction steps
+- Update `model_fit_colab` to use all three scales
+- Make `main.py` have a parameter for the scale, without manually specifying the models
