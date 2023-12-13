@@ -23,21 +23,7 @@ def divide_spec(spec, scale, out_path):
     # create spectrogram's filenames
     out_name = spec.split("/")[-1]
 
-    # can use different settings for different scales, but at the end
-    # the same setting can work for every scale so it's redundant, will probably
-    # delete 
-    low_thresh = {
-        'log': 15,
-        'mel': 15,
-        'lin': 15,
-    }
-
-    h_size = {
-        'log': 3,
-        'mel': 3,
-        'lin': 3,
-    }
-
+    # this is probably useless as a v_size of 20 likely works for every scale, will remove
     v_size = {
         'log': 10,
         'mel': 20,
@@ -47,7 +33,7 @@ def divide_spec(spec, scale, out_path):
     # read image and highlight split
     img = cv.imread(spec)
     thresholded = vision.highlight_split(
-        img=img, low_thresh=low_thresh[scale], high_thresh=255, h_size=h_size[scale], v_size=v_size[scale])
+        img=img, low_thresh=15, high_thresh=255, h_size=3, v_size=v_size[scale])
 
     # --- for manual revision only
     # comparison_img = np.concatenate([img, thresholded])
@@ -58,7 +44,8 @@ def divide_spec(spec, scale, out_path):
 
     img_splits = vision.find_splits(thresholded)
     if len(img_splits) != 0:
-        vision.divide_half(img=img, filename=out_name, middle=img_splits[len(img_splits)//2], left_path=c_path, right_path=w_path)
+        vision.divide_half(img=img, filename=out_name, middle=img_splits[len(
+            img_splits)//2], left_path=c_path, right_path=w_path)
 
     return
 
@@ -77,6 +64,7 @@ if __name__ == "__main__":
                         help="""Path in which to store the output. If it doesn't exist, it
                         will be created""")
 
+    # TODO: scale argument is probably useless, will remove
     # required argument: scale
     parser.add_argument('-s', '--scale', type=str,
                         help="""What scale is used on the y-axis of the spectrogram(s).
@@ -91,7 +79,7 @@ if __name__ == "__main__":
     # check validity of scale parameter
     if scale not in ["log", "mel", "lin"]:
         print(
-            f"{scale} is not a valid scale option, see wav2spec -h for help. Exiting program")
+            f"{scale} is not a valid scale option, see divide.py -h for help. Exiting program")
         sys.exit(1)
 
     if in_path.endswith(".png"):

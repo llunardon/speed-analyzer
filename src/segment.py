@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # required argument: 'correct' spectrogram(s)
     parser.add_argument('-c', '--correct', type=str,
-                        help="folder containing the spectrogram(s) labeled 'w' to divide.")
+                        help="folder containing the spectrogram(s) labeled 'c' to divide.")
 
     # required argument: 'wrong' spectrogram(s)
     parser.add_argument('-w', '--wrong', type=str,
