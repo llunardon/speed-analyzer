@@ -1,4 +1,4 @@
-# MPAI Audio Analyser: Speed Irregularities Detector
+# MPAI Audio Analyzer: Speed Irregularities Detector
 
 ### Usage:
 
@@ -49,4 +49,4 @@ Starting from the audio samples with the channels already separated, follow thes
 - Script to divide audio samples in two channels
 - Automate dataset extraction steps
 - Update `model_fit_colab` to use all three scales
-- Make `main.py` have a parameter for the scale, without manually specifying the models
+- main.py breaks when input is mono, need to fix

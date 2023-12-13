@@ -1,7 +1,9 @@
-/output
+**/output
+/out
 /samples
 /temp
 dataset.tar.gz
 *.png
 *.zip
 **/__pycache__
+spectral_extraction.ipynb
