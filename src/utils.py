@@ -1,8 +1,13 @@
+import sys
 import os
 import numpy as np
 import shutil
 import math
 import random
+
+
+def get_script_path():
+    return os.path.dirname(os.path.realpath(sys.argv[0]))
 
 
 def delete_folder(path):
