@@ -63,6 +63,8 @@ def wav2spec(sample, scale, out_path):
                 '-R', '0:20k',
                 '-o', out_name,
             ])
+    
+    return out_name
 
 
 if __name__ == "__main__":
