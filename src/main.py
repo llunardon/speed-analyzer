@@ -5,26 +5,18 @@ import argparse
 
 import utils
 import vision
+from wav2spec import wav2spec
 
+import cv2 as cv
 from scipy.io import wavfile
 from keras.models import load_model
 import librosa
 
 
-def analyze_speed(sample, binary_model_path, four_classes_model_path):
+def analyze_speed(sample, scale, binary_model_path, four_classes_model_path):
     # load the keras classifiers
     binary_model = load_model(binary_model_path)
     four_classes_model = load_model(four_classes_model_path)
-
-    # spectrogram settings
-    hop_length = 256  # number of samples per time-step in spectrogram
-    n_mels = 128  # number of bins in spectrogram. Height of image
-    time_steps = 512  # number of time-steps.
-
-    # settings for the scanning of the spectrogram
-    step = 32
-    offset = 0
-    window_width = 256
 
     # speedup corresponding to the label output by the second classifier
     speedup_dict = {
@@ -40,6 +32,7 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
 
     # read audio sample
     fs, data = wavfile.read(sample)
+    print(data.shape)
 
     # for each channel:
     for i in range(0, data.shape[1]):
@@ -61,21 +54,24 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
         # load audio of channel and get the duration
         y, sr = librosa.load(channel_filename, offset=0.0, duration=None)
         duration = round(librosa.get_duration(filename=sample), 2)
-
         with open(log_filename, 'a') as log_file:
             log_file.write(f"Duration: {duration}s\n")
 
-        # save spectrogram
-        spec_name = channel_path + "spec_ch" + str(i) + '.png'
-        spectrum = vision.spectrogram_image(
-            y, sr=sr, out=spec_name, hop_length=hop_length, n_mels=n_mels, save=True)
+        # save spectrogram and load it into numpy array
+        spec_name = wav2spec(channel_filename, scale, channel_path)
+        spectrum = cv.imread(spec_name, cv.IMREAD_GRAYSCALE)
         height, width = spectrum.shape[:2]
 
         if width < 256:
             print("The audio file is too short to be analyzed")
             break
 
-        # scan the whole spectrogram and divide it in segments (windows)
+        # settings for the scanning of the spectrogram
+        step = 32
+        offset = 0
+        window_width = 256
+
+        # scan the whole spectrogram and divide it in windows (segments)
         for i in range(0, width//step):
             if offset + i*step + window_width < width:
                 window = spectrum[0:height, offset+i *
@@ -100,32 +96,52 @@ def analyze_speed(sample, binary_model_path, four_classes_model_path):
 
         # save the windows for manual analysis
         vision.compute_segments([channel_path], [segments_path], step=step,
-                                window_width=window_width, overwrite=True, multiple=True, offset=offset)
+                                window_width=window_width, multiple=True, offset=offset)
 
 
 if __name__ == "__main__":
+    script_path = utils.get_script_path()
+    models_path = os.path.dirname(script_path) + "/models/"
+
     # parse input arguments
     parser = argparse.ArgumentParser(
-        description="Analyze a digitised magnetic audio tape and detect irregularities in the playback speed.")
+        description="""Analyze a digitised magnetic audio tape and detect discrepancies 
+        between the recording speed and the playback speed.""")
 
     # required arguments: audio sample
     parser.add_argument('-i', '--input', type=str,
-                        help='path to the audio sample to analyze')
+                        help='Path to the audio sample to analyze.')
 
-    # optional arguments: path to models
-    parser.add_argument('-b', '--bin_model', type=str, nargs='?',
-                        default='models-def/model-binary-separatechannels/', help='path to the binary model directory')
-    parser.add_argument('-f', '--four_model', type=str, nargs='?',
-                        default='models-def/model-4classes-separatechannels/', help='path to the four-classes model directory')
+    # required arguments: scale for y-axis
+    parser.add_argument('-s', '--scale', type=str,
+                        help="""Which scale to use for the y-axis of the spectrogram. Also switches to the
+                        correct model to use for the classification. Valid choices are 'log', 'lin' and 'mel.""")
 
     args = parser.parse_args()
 
-    # read the input parameters
+    # read the input parameters and check for correctness
     sample = args.input
-    binary_model_path = args.bin_model
-    four_classes_model_path = args.four_model
+    scale = args.scale
 
     if not (sample.endswith(".wav")):
-        print("The input file is not a .wav file")
-    else:
-        analyze_speed(sample, binary_model_path, four_classes_model_path)
+        print("The input file is not a .wav file.")
+        sys.exit(1)
+
+    if not (scale in ['lin', 'log', 'mel']):
+        print("The scale chosen is not valid. See main.py -h for information.")
+
+    # define paths to models
+    binary_models = {
+        'lin': models_path + "model-binary-lin/",
+        'log': models_path + "model-binary-log/",
+        'mel': models_path + "model-binary-mel/"
+    }
+
+    four_classes_models = {
+        'lin': models_path + "model-4c-lin/",
+        'log': models_path + "model-4c-log/",
+        'mel': models_path + "model-4c-mel/"
+    }
+
+    analyze_speed(
+        sample, scale, binary_models[scale], four_classes_models[scale])
