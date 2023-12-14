@@ -6,9 +6,6 @@
     python3 src/main.py -i [sample.wav] -s [scale]
 ```
 
-- **Note:** The arguments `-b` and `-f` are optional, if not provided the default models used are
-  `model-binary-separatechannels` and `model-4classes-separatechannels` in the folder `models-def/`
-
 ---
 
 The script generates a folder called `output` in the project directory, that contains:
@@ -49,4 +46,3 @@ Starting from the audio samples with the channels already separated, follow thes
 - Script to divide audio samples in two channels
 - Automate dataset extraction steps
 - Update `model_fit_colab` to use all three scales
-- main.py breaks when input is mono, need to fix
