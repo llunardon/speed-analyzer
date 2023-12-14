@@ -3,7 +3,7 @@
 ### Usage:
 
 ```
-    python3 src/main.py -i "wav_file_path" -b "binary_model_path" -f "4classes_model_path"
+    python3 src/main.py -i [sample.wav] -s [scale]
 ```
 
 - **Note:** The arguments `-b` and `-f` are optional, if not provided the default models used are
