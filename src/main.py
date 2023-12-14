@@ -9,11 +9,11 @@ from wav2spec import wav2spec
 
 import cv2 as cv
 from scipy.io import wavfile
-from keras.models import load_model
 import librosa
 
 
 def analyze_speed(sample, scale, binary_model_path, four_classes_model_path):
+    from keras.models import load_model
     # load the keras classifiers
     binary_model = load_model(binary_model_path)
     four_classes_model = load_model(four_classes_model_path)
@@ -32,7 +32,10 @@ def analyze_speed(sample, scale, binary_model_path, four_classes_model_path):
 
     # read audio sample
     fs, data = wavfile.read(sample)
-    print(data.shape)
+
+    # sample is mono
+    if len(data.shape) == 1:
+        data.shape = (data.shape[0], 1)
 
     # for each channel:
     for i in range(0, data.shape[1]):
