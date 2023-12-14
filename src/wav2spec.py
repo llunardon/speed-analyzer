@@ -19,7 +19,7 @@ def wav2spec(sample, scale, out_path):
     out_name = sample.split("/")
     out_name = out_path + out_name[-1].split(".")[0] + '.png'
 
-    duration = int(round(librosa.get_duration(filename=sample), 2))
+    duration = round(librosa.get_duration(filename=sample), 2)
     if duration < 1:
         print(f"file {sample} is too short. Skipping to next one..")
         return
@@ -29,7 +29,7 @@ def wav2spec(sample, scale, out_path):
         y, sr = librosa.load(sample, sr=None)
 
         vision.mel_spectrogram_image(
-            y, sr, out_name, hop_length=512, n_mels=128, dimensions=(duration*100, 128), save=True)
+            y, sr, out_name, hop_length=512, n_mels=128, dimensions=(int(duration*100), 128), save=True)
 
     else:
         width = str(duration*100)
