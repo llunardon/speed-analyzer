@@ -9,7 +9,7 @@ import utils
 import vision
 
 
-def wav2spec(sample, scale, out_path):
+def wav2spec(sample, scale, out_path, width_res=100):
     if not out_path.endswith("/"):
         out_path = out_path + "/"
     if not os.path.isdir(out_path):
@@ -29,10 +29,10 @@ def wav2spec(sample, scale, out_path):
         y, sr = librosa.load(sample, sr=None)
 
         vision.mel_spectrogram_image(
-            y, sr, out_name, hop_length=512, n_mels=128, dimensions=(int(duration*100), 128), save=True)
+            y, sr, out_name, hop_length=512, n_mels=128, dimensions=(int(duration*width_res), 128), save=True)
 
     else:
-        width = str(duration*100)
+        width = str(duration*width_res)
         height = str(128)
 
         # lin-spec
@@ -63,7 +63,7 @@ def wav2spec(sample, scale, out_path):
                 '-R', '0:20k',
                 '-o', out_name,
             ])
-    
+
     return out_name
 
 
@@ -86,11 +86,16 @@ if __name__ == "__main__":
                         help="""What scale to use on the y-axis of the spectrogram.
                         possible options are 'log', 'mel' or 'lin'""")
 
+    # optional arguments: resolution of x-axis (pixels per second)
+    parser.add_argument('-w', '--width', nargs='?', type=int, default=100,
+                        help="What resolution to use on the x-axis, in pixels/s. Default is 100.")
+
     args = parser.parse_args()
 
     in_path = args.input
     out_path = args.output
     scale = args.scale
+    width_res = args.width
 
     # check validity of scale parameter
     if scale not in ["log", "mel", "lin"]:
@@ -99,7 +104,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if in_path.endswith(".wav"):
-        wav2spec(sample=in_path, scale=scale, out_path=out_path)
+        wav2spec(sample=in_path, scale=scale, out_path=out_path, width_res=width_res)
 
     elif os.path.isdir(in_path):
         sample_list = utils.collect_audio_files(in_path)
@@ -109,7 +114,7 @@ if __name__ == "__main__":
             sys.exit(1)
 
         for sample in sample_list:
-            wav2spec(sample=sample, scale=scale, out_path=out_path)
+            wav2spec(sample=sample, scale=scale, out_path=out_path, width_res=width_res)
 
     else:
         print(f"{in_path} is neither a .wav file, nor a folder.")
