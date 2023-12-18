@@ -6,6 +6,11 @@
     python3 src/main.py -i [sample.wav] -s [scale]
 ```
 
+### Optional Arguments:
+
+- `-w`: resolution to use for the x-axis, in pixels/s. Default is 256px/s
+- `-j`: length of the step to use for scanning of the spectrograms. Default is 64px
+
 ---
 
 The script generates a folder called `output` in the project directory, that contains:
@@ -46,3 +51,5 @@ Starting from the audio samples with the channels already separated, follow thes
 - Script to divide audio samples in two channels
 - Automate dataset extraction steps
 - Update `model_fit_colab` to use all three scales
+
+- Try linear model with 128x128 windows

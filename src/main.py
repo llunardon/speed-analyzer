@@ -12,7 +12,7 @@ from scipy.io import wavfile
 import librosa
 
 
-def analyze_speed(sample, scale, binary_model_path, four_classes_model_path):
+def analyze_speed(sample, scale, binary_model_path, four_classes_model_path, width_res, step):
     from keras.models import load_model
     # load the keras classifiers
     binary_model = load_model(binary_model_path)
@@ -61,7 +61,7 @@ def analyze_speed(sample, scale, binary_model_path, four_classes_model_path):
             log_file.write(f"Duration: {duration}s\n")
 
         # save spectrogram and load it into numpy array
-        spec_name = wav2spec(channel_filename, scale, channel_path)
+        spec_name = wav2spec(channel_filename, scale, channel_path, width_res)
         spectrum = cv.imread(spec_name, cv.IMREAD_GRAYSCALE)
         height, width = spectrum.shape[:2]
 
@@ -70,7 +70,6 @@ def analyze_speed(sample, scale, binary_model_path, four_classes_model_path):
             break
 
         # settings for the scanning of the spectrogram
-        step = 32
         offset = 0
         window_width = 256
 
@@ -120,11 +119,20 @@ if __name__ == "__main__":
                         help="""Which scale to use for the y-axis of the spectrogram. Also switches to the
                         correct model to use for the classification. Valid choices are 'log', 'lin' and 'mel.""")
 
-    args = parser.parse_args()
+    # optional arguments: resolution of x-axis (pixels per second)
+    parser.add_argument('-w', '--width', nargs='?', type=int, default=256,
+                        help="What resolution to use on the x-axis, in pixels/s. Default is 256.")
+
+    # optional arguments: step
+    parser.add_argument('-j', '--jump', nargs='?', type=int, default=64,
+                        help="What step to use for the scanning of the spectrum. Default is 64.")
 
     # read the input parameters and check for correctness
+    args = parser.parse_args()
     sample = args.input
     scale = args.scale
+    width_res = args.width
+    step = args.jump
 
     if not (sample.endswith(".wav")):
         print("The input file is not a .wav file.")
@@ -147,4 +155,4 @@ if __name__ == "__main__":
     }
 
     analyze_speed(
-        sample, scale, binary_models[scale], four_classes_models[scale])
+        sample, scale, binary_models[scale], four_classes_models[scale], width_res, step)
