@@ -3,7 +3,7 @@
 ### Usage:
 
 ```
-    python3 src/main.py -i [sample.wav] -s [scale]
+    python3 src/main.py -i [sample.wav] -s [scale] [opt_args]
 ```
 
 ### Optional Arguments:

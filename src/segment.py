@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     # parse input arguments
     args = parser.parse_args()
-    in_path = args.wrong
+    in_path = args.input
     out_path = args.output
     window_width = args.width
     step = args.jump
