@@ -39,8 +39,12 @@ Starting from the audio samples with the channels already separated, follow thes
 2. Execute script `src/divide.py -i [spec_dir] -s [scale] -o [halfs]`. The script will divide the spectrograms in two halfs, one labeled
    'c' and one labeled 'w'
 
-3. Execute script `src/segment.py -c [halfs_c] -w [halfs_w] -o [out_folder]`. This will extract numerous fixed-size segments from the two halfs
+3. Execute script `src/segment.py -i [halfs] -o [out_folder] [opt_args]`. This will extract numerous fixed-size segments from the two halfs
    computed at the previous step, which will be used as the dataset for the models
+
+   Optional arguments for `segment.py`:
+   - `-w`: width of each segment, default is 256 pixels
+   - `-j`: step used for the scanning of the spectrum. Default is 64 pixels
 
 - If you want to skip these steps and download the archived datasets directly, you can get them [here](https://drive.google.com/drive/folders/1-XSowWtwhLuJ3vkEJ-t8XaG1RTapbWNw?usp=sharing)
 

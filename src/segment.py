@@ -14,36 +14,43 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Divide some spectrogram(s) in two parts, the one before the speed transition and the one after")
 
-    # required argument: 'correct' spectrogram(s)
-    parser.add_argument('-c', '--correct', type=str,
-                        help="folder containing the spectrogram(s) labeled 'c' to divide.")
-
-    # required argument: 'wrong' spectrogram(s)
-    parser.add_argument('-w', '--wrong', type=str,
-                        help="folder containing the spectrogram(s) labeled 'w' to divide.")
+    # required argument: folder containing the spectrogram(s)
+    parser.add_argument('-i', '--input', type=str,
+                        help="Folder containing the spectrogram(s) to be divided")
 
     # required argument: output folder
     parser.add_argument('-o', '--output', type=str,
                         help="""Path in which to store the segmented spectrogram(s). If it doesn't exist it will
                         be created. Name must be different from input folder's name""")
 
+    # optional arguments: width of each segment
+    parser.add_argument('-w', '--width', nargs='?', type=int, default=256,
+                        help="How wide each segment should be. Default is 256 pixels.")
+
+    # optional arguments: step
+    parser.add_argument('-j', '--jump', nargs='?', type=int, default=256,
+                        help="Step to use for the scanning of the spectrum. Default is 64 pixels.")
+
     # parse input arguments
     args = parser.parse_args()
-    c_path = args.correct
-    w_path = args.wrong
+    in_path = args.wrong
     out_path = args.output
+    window_width = args.width
+    step = args.jump
 
     # correct the path adding the trailing "/" if missing
+    if not in_path.endswith("/"):
+        w_path = out_path + "/"
     if not out_path.endswith("/"):
         out_path = out_path + "/"
-    if not c_path.endswith("/"):
-        c_path = c_path + "/"
-    if not w_path.endswith("/"):
-        w_path = out_path + "/"
+
+    c_path = in_path + "c/"
+    w_path = in_path + "w/"
 
     # check validity of input parameters
     if not (os.path.isdir(c_path)) or not (os.path.isdir(w_path)):
-        print(f"The input directories don't exist. Exiting program.")
+        print(f"""The input directories don't exist, or they are
+        not named 'c' and 'w'. Exiting program.""")
         sys.exit(1)
 
     # create output paths for the segments
@@ -59,4 +66,4 @@ if __name__ == "__main__":
         utils.create_folder(seg_w_path)
 
     vision.compute_segments([c_path, w_path], [seg_c_path, seg_w_path],
-                            step=64, window_width=256, multiple=True, offset=0)
+                            step=step, window_width=window_width, multiple=True, offset=0)
