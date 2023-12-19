@@ -28,7 +28,7 @@ if __name__ == "__main__":
                         help="How wide each segment should be. Default is 256 pixels.")
 
     # optional arguments: step
-    parser.add_argument('-j', '--jump', nargs='?', type=int, default=256,
+    parser.add_argument('-j', '--jump', nargs='?', type=int, default=64,
                         help="Step to use for the scanning of the spectrum. Default is 64 pixels.")
 
     # parse input arguments
