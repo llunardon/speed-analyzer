@@ -9,7 +9,7 @@ import utils
 import vision
 
 
-def wav2spec(sample, scale, out_path, width_res=100):
+def wav2spec(sample, scale, out_path, width_res=256):
     if not out_path.endswith("/"):
         out_path = out_path + "/"
     if not os.path.isdir(out_path):
@@ -87,8 +87,8 @@ if __name__ == "__main__":
                         possible options are 'log', 'mel' or 'lin'""")
 
     # optional arguments: resolution of x-axis (pixels per second)
-    parser.add_argument('-w', '--width', nargs='?', type=int, default=100,
-                        help="What resolution to use on the x-axis, in pixels/s. Default is 100.")
+    parser.add_argument('-w', '--width', nargs='?', type=int, default=256,
+                        help="What resolution to use on the x-axis, in pixels/s. Default is 256.")
 
     args = parser.parse_args()
 
