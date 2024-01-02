@@ -43,17 +43,15 @@ Starting from the audio samples with the channels already separated, follow thes
    computed at the previous step, which will be used as the dataset for the models
 
    Optional arguments for `segment.py`:
+
    - `-w`: width of each segment, default is 256 pixels
    - `-j`: step used for the scanning of the spectrum. Default is 64 pixels
 
-- If you want to skip these steps and download the archived datasets directly, you can get them [here](https://drive.google.com/drive/folders/1-XSowWtwhLuJ3vkEJ-t8XaG1RTapbWNw?usp=sharing)
+- If you want to skip these steps and download the archived datasets directly, you can get them [here](https://drive.google.com/file/d/1QI7oj-myHvzMUfvUid_h135LY8NxZGcC/view?usp=sharing)
 
 ---
 
 ### TODO:
 
-- Script to divide audio samples in two channels
 - Automate dataset extraction steps
 - Update `model_fit_colab` to use all three scales
-
-- Try linear model with 128x128 windows
