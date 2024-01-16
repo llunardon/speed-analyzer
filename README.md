@@ -51,6 +51,13 @@ Starting from the audio samples with the channels already separated, follow thes
 
 ---
 
+### Test Dataset:
+
+The dataset used for testing the models can be downloaded at this
+[Google Drive link](https://drive.google.com/file/d/1gzg3pq3RKm9hRMZ5a8a_plY5_mm1iOfG/view?usp=sharing).
+
+---
+
 ### TODO:
 
 - Automate dataset extraction steps
