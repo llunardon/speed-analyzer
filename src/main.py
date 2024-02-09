@@ -10,10 +10,12 @@ from wav2spec import wav2spec
 import cv2 as cv
 from scipy.io import wavfile
 import librosa
+# generator buffer
 
 
 def analyze_speed(sample, scale, binary_model_path, four_classes_model_path, width_res, step):
     from keras.models import load_model
+
     # load the keras classifiers
     binary_model = load_model(binary_model_path)
     four_classes_model = load_model(four_classes_model_path)
@@ -112,7 +114,7 @@ if __name__ == "__main__":
 
     # required arguments: audio sample
     parser.add_argument('-i', '--input', type=str,
-                        help='Path to the audio sample to analyze.')
+                        help='Path to the WAV audio sample to analyze.')
 
     # required arguments: scale for y-axis
     parser.add_argument('-s', '--scale', type=str,
@@ -125,7 +127,7 @@ if __name__ == "__main__":
 
     # optional arguments: step
     parser.add_argument('-j', '--jump', nargs='?', type=int, default=64,
-                        help="What step to use for the scanning of the spectrum. Default is 64.")
+                        help="What step to use for the scanning of the spectrum. Default is 64 pixels.")
 
     # read the input parameters and check for correctness
     args = parser.parse_args()

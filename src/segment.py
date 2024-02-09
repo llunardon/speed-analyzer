@@ -12,11 +12,11 @@ import vision
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Divide some spectrogram(s) in two parts, the one before the speed transition and the one after")
+        description="Extract multiple fixed-width segments from the spectrograms, scanning them left-to-right.")
 
     # required argument: folder containing the spectrogram(s)
     parser.add_argument('-i', '--input', type=str,
-                        help="Folder containing the spectrogram(s) to be divided")
+                        help="Folder containing the spectrogram(s) to be segmented")
 
     # required argument: output folder
     parser.add_argument('-o', '--output', type=str,
@@ -66,4 +66,4 @@ if __name__ == "__main__":
         utils.create_folder(seg_w_path)
 
     vision.compute_segments([c_path, w_path], [seg_c_path, seg_w_path],
-                            step=step, window_width=window_width, multiple=True, offset=0)
+                            step=step, window_width=window_width, multiple=True, offset=128)

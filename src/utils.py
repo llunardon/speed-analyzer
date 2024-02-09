@@ -56,16 +56,6 @@ def collect_png_files(path):
     return ret_list
 
 
-"""
-    inputs: in_paths  ---> list of paths, where every path corresponds to a different label
-            out_paths ---> names of training, validation and test folders, in this order
-              ratios  ---> what fraction of the dataset goes into training, validation and testing
-              seed    ---> seed used for randomization 
-
-              NOTE: this function is only used in the Colab Notebook for now
-"""
-
-
 def create_dataset(in_paths, labels, out_paths, ratios, seed):
     if len(ratios) != 3 or len(out_paths) != 3:
         print("Output configuration is wrong")
@@ -118,3 +108,13 @@ def create_dataset(in_paths, labels, out_paths, ratios, seed):
                     for filename in test_files:
                         shutil.copyfile(in_path + filename,
                                         out_path + label + "/" + filename)
+
+
+"""
+    inputs: in_paths  ---> list of paths, where every path corresponds to a different label
+            out_paths ---> names of training, validation and test folders, in this order
+              ratios  ---> what fraction of the dataset goes into training, validation and testing
+              seed    ---> seed used for randomization 
+
+              NOTE: this function is only used in the Colab Notebook for now
+"""

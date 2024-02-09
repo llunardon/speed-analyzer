@@ -104,7 +104,8 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if in_path.endswith(".wav"):
-        wav2spec(sample=in_path, scale=scale, out_path=out_path, width_res=width_res)
+        wav2spec(sample=in_path, scale=scale,
+                 out_path=out_path, width_res=width_res)
 
     elif os.path.isdir(in_path):
         sample_list = utils.collect_audio_files(in_path)
@@ -114,7 +115,8 @@ if __name__ == "__main__":
             sys.exit(1)
 
         for sample in sample_list:
-            wav2spec(sample=sample, scale=scale, out_path=out_path, width_res=width_res)
+            wav2spec(sample=sample, scale=scale,
+                     out_path=out_path, width_res=width_res)
 
     else:
         print(f"{in_path} is neither a .wav file, nor a folder.")

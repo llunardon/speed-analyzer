@@ -61,4 +61,3 @@ The dataset used for testing the models can be downloaded at this
 ### TODO:
 
 - Automate dataset extraction steps
-- Update `model_fit_colab` to use all three scales

@@ -31,21 +31,15 @@ def divide_spec(spec, scale, out_path):
     }
 
     # read image and highlight split
+    print(spec)
     img = cv.imread(spec)
     thresholded = vision.highlight_split(
         img=img, low_thresh=15, high_thresh=255, h_size=3, v_size=v_size[scale])
 
-    # --- for manual revision only
-    # comparison_img = np.concatenate([img, thresholded])
-    # comparison_img = cv.resize(comparison_img, (1000, 128), cv.INTER_LINEAR)
-    # cv.imshow("img", comparison_img)
-    # cv.waitKey(0)
-    # ----------------------------
-
     img_splits = vision.find_splits(thresholded)
     if len(img_splits) != 0:
-        vision.divide_half(img=img, filename=out_name, middle=img_splits[len(
-            img_splits)//2], left_path=c_path, right_path=w_path)
+        vision.divide_half(img=img, filename=out_name,
+                           middle=img_splits[0], left_path=c_path, right_path=w_path)
 
     return
 

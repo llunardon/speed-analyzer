@@ -7,3 +7,5 @@ dataset.tar.gz
 *.zip
 **/__pycache__
 spectral_extraction.ipynb
+notes.md
+*.wav

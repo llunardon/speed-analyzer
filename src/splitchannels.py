@@ -26,7 +26,7 @@ def split_channels(sample, out_path):
     for i in range(0, data.shape[1]):
         # save audio of channel
         channel_filename = out_path + \
-            sample.split("/")[-1][0:-3] + "ch" + str(i) + ".wav"
+            sample.split("/")[-1][0:-4] + "ch" + str(i) + ".wav"
         wavfile.write(channel_filename, fs, data[:, i])
 
     return
